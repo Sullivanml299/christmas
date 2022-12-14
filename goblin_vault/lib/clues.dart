@@ -7,12 +7,15 @@ class ClueData {
 
   String prompt;
   bool isSolved = false;
-  String password;
+  dynamic password;
   int index;
 }
 
 ClueData C1 = ClueData(prompt: "Riddle 1", password: "password1", index: 0),
-    C2 = ClueData(prompt: "Riddle 2", password: "password2", index: 1),
+    C2 = ClueData(
+        prompt: "Riddle 2",
+        password: const TimeOfDay(hour: 14, minute: 12),
+        index: 1),
     C3 = ClueData(prompt: "Riddle 3", password: "password3", index: 2),
     C4 = ClueData(prompt: "Riddle 4", password: "password4", index: 3);
 

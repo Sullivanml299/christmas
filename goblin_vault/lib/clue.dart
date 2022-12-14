@@ -14,29 +14,14 @@ class Clue extends StatefulWidget {
 }
 
 class _ClueState extends State<Clue> {
-  late TextEditingController _controller;
   List<bool> tracker = clueTracker;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  submit(String value) {
-    print("VALUE: $value");
-    // validate();
-  }
-
-  bool validate(String password) {
-    print(password);
-    print(widget.data.password);
+  bool validate(dynamic password) {
     if (password == widget.data.password) {
       widget.notifier();
       tracker[widget.data.index] = true;

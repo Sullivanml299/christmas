@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goblin_vault/clock.dart';
 import 'package:goblin_vault/clue.dart';
 import 'package:goblin_vault/clue_stepper.dart';
 import 'package:goblin_vault/qr_scanner.dart';
