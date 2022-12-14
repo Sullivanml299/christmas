@@ -69,15 +69,19 @@ class _ScannerState extends State<Scanner> {
       setState(() {
         result = scanData;
       });
-      var isSolved = widget.validator(scanData.code);
-      print(isSolved);
-      if (isSolved && !solved) {
-        setState(() {
-          solved = isSolved;
-        });
-        Navigator.of(context).pop();
-      }
+      validateClue(scanData.code);
     });
+  }
+
+  validateClue(dynamic password) {
+    var isSolved = widget.validator(password);
+    print(isSolved);
+    if (isSolved && !solved) {
+      setState(() {
+        solved = isSolved;
+      });
+      Navigator.of(context).pop();
+    }
   }
 
   @override

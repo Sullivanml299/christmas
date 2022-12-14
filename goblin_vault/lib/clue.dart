@@ -48,8 +48,8 @@ class _ClueState extends State<Clue> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Scanner(
-                                validator: validate,
+                          builder: (context) => data.solver(
+                                validate,
                               )),
                     );
                   },
