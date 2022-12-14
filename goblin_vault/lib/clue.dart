@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:goblin_vault/clues.dart';
+import 'package:goblin_vault/qr_scanner.dart';
 
 class Clue extends StatefulWidget {
   const Clue({super.key, required this.data, required this.notifier});
@@ -30,14 +31,18 @@ class _ClueState extends State<Clue> {
 
   submit(String value) {
     print("VALUE: $value");
-    validate();
+    // validate();
   }
 
-  validate() {
-    widget.notifier();
-    print(widget.data.index);
-    tracker[widget.data.index] = true;
-    print(tracker);
+  bool validate(String password) {
+    print(password);
+    print(widget.data.password);
+    if (password == widget.data.password) {
+      widget.notifier();
+      tracker[widget.data.index] = true;
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -53,12 +58,28 @@ class _ClueState extends State<Clue> {
           ]),
           Row(
             children: [
-              Expanded(
-                  child: TextField(
-                      controller: _controller,
-                      onSubmitted: ((String value) => submit(value)))),
+              ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Scanner(
+                                validator: validate,
+                              )),
+                    );
+                  },
+                  icon: const Icon(Icons.scanner),
+                  label: const Text("scanner"))
             ],
           )
+          // Row(
+          //   children: [
+          //     Expanded(
+          //         child: TextField(
+          //             controller: _controller,
+          //             onSubmitted: ((String value) => submit(value)))),
+          //   ],
+          // )
         ],
       ),
     ));

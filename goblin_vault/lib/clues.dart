@@ -11,10 +11,10 @@ class ClueData {
   int index;
 }
 
-ClueData C1 = ClueData(prompt: "Riddle 1", password: "password", index: 0),
-    C2 = ClueData(prompt: "Riddle 2", password: "password", index: 1),
-    C3 = ClueData(prompt: "Riddle 3", password: "password", index: 2),
-    C4 = ClueData(prompt: "Riddle 4", password: "password", index: 3);
+ClueData C1 = ClueData(prompt: "Riddle 1", password: "password1", index: 0),
+    C2 = ClueData(prompt: "Riddle 2", password: "password2", index: 1),
+    C3 = ClueData(prompt: "Riddle 3", password: "password3", index: 2),
+    C4 = ClueData(prompt: "Riddle 4", password: "password4", index: 3);
 
 List<ClueData> CLUE_DATA = [C1, C2, C3, C4];
 
