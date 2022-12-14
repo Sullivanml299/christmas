@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:goblin_vault/clue.dart';
 import 'package:goblin_vault/clues.dart';
 
+import 'custom_stepper.dart';
+
 class ClueStepper extends StatefulWidget {
   const ClueStepper({super.key});
 
@@ -13,7 +15,7 @@ class ClueStepper extends StatefulWidget {
 class _ClueStepperState extends State<ClueStepper> {
   int _index = 0;
   List<bool> isSolved = clueTracker;
-  List<Step>? clues;
+  List<CustomStep>? clues;
 
   @override
   void initState() {
@@ -30,7 +32,7 @@ class _ClueStepperState extends State<ClueStepper> {
 
   Widget buildStepper() {
     if (clues != null) {
-      return Stepper(
+      return CustomStepper(
           currentStep: _index,
           controlsBuilder: (context, details) {
             return Row(
@@ -82,12 +84,17 @@ class _ClueStepperState extends State<ClueStepper> {
     setState(() {});
   }
 
-  List<Step> buildClues() {
-    List<Step> clues = [];
+  List<CustomStep> buildClues() {
+    List<CustomStep> clues = [];
     for (ClueData data in CLUE_DATA) {
       clues.add(
-        Step(
+        CustomStep(
             title: Text('Step ${data.index + 1} title'),
+            state: CustomStepState.customIcon,
+            customIcon: const Icon(
+              Icons.money,
+              size: 18.0,
+            ),
             content: Container(
               alignment: Alignment.centerLeft,
               child: Clue(
