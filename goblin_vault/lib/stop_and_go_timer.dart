@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 
 class StopAndGoTimer extends StatefulWidget {
   const StopAndGoTimer({super.key});
@@ -10,16 +12,37 @@ class StopAndGoTimer extends StatefulWidget {
 }
 
 class _StopAndGoTimerState extends State<StopAndGoTimer> {
-  int countDownMax = 3;
+  int countDownMax = 2;
   late int countDown;
   STOP_GO_STATE gameState = STOP_GO_STATE.setup;
   TextStyle textStyle = TextStyle(
       fontSize: 100, fontWeight: FontWeight.bold, color: Colors.white);
+  double threshold = 0.5;
+  List<double>? _userAccelerometerValues;
+  final _streamSubscriptions = <StreamSubscription<dynamic>>[];
+  Timer? currentTimer;
 
   @override
   void initState() {
     super.initState();
     countDown = countDownMax;
+    _streamSubscriptions.add(
+      userAccelerometerEvents.listen(
+        (UserAccelerometerEvent event) {
+          setState(() {
+            _userAccelerometerValues = <double>[event.x, event.y, event.z];
+          });
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (final subscription in _streamSubscriptions) {
+      subscription.cancel();
+    }
   }
 
   Timer scheduleTimeout([int milliseconds = 10000]) =>
@@ -73,8 +96,8 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
     }
 
     setState(() {
+      currentTimer = scheduleTimeout(duration);
       gameState = newState;
-      scheduleTimeout(duration);
     });
   }
 
@@ -83,14 +106,48 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
     return gameState == STOP_GO_STATE.setup ? buildButton() : buildCountDown();
   }
 
+  bool isStopped() {
+    if (_userAccelerometerValues == null) return true;
+    for (double val in _userAccelerometerValues!) {
+      if (val.abs() > threshold) {
+        HapticFeedback.vibrate();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  reset() {
+    setState(() {
+      gameState = STOP_GO_STATE.setup;
+      countDown = countDownMax;
+      currentTimer?.cancel();
+      currentTimer ??= null;
+    });
+  }
+
   Widget buildCountDown() {
+    if ((gameState == STOP_GO_STATE.stop ||
+            gameState == STOP_GO_STATE.stopCountDown) &&
+        !isStopped()) {
+      reset();
+    }
+
     Text text = (gameState == STOP_GO_STATE.goCountDown ||
             gameState == STOP_GO_STATE.stopCountDown)
         ? Text(
-            "$countDown",
+            "${countDown + 1}",
             style: textStyle,
           )
-        : Text("");
+        : gameState == STOP_GO_STATE.go
+            ? Text(
+                "GO!",
+                style: textStyle,
+              )
+            : Text(
+                "STOP!",
+                style: textStyle,
+              );
 
     return Center(
         child: Container(
@@ -109,7 +166,7 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
             onPressed: () {
               setState(() {
                 gameState = STOP_GO_STATE.stopCountDown;
-                scheduleTimeout(1000);
+                currentTimer = scheduleTimeout(1000);
               });
             },
             child: Text("Start")));
