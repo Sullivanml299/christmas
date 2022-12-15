@@ -76,6 +76,8 @@ class _ClueState extends State<Clue> {
     if (solver == CLOCK) return const Icon(Icons.access_time_filled);
     if (solver == SCANNER) return const Icon(Icons.camera);
     if (solver == KEYPAD) return const Icon(Icons.password);
+    if (solver == STOPANDGO) return const Icon(Icons.preview);
+    if (solver == HIDEANDSEEK) return const Icon(Icons.my_location);
     return const Icon(Icons.zoom_out_map);
   }
 }

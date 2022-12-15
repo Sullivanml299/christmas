@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:goblin_vault/clue.dart';
+import 'package:goblin_vault/hide_and_seek.dart';
 import 'package:goblin_vault/keypad.dart';
 import 'package:goblin_vault/qr_scanner.dart';
+import 'package:goblin_vault/stop_and_go_timer.dart';
 
 import 'clock.dart';
 
@@ -22,6 +24,8 @@ class ClueData {
 var SCANNER = (Function validator) => Scanner(validator: validator);
 var CLOCK = (Function validator) => Clock(validator: validator);
 var KEYPAD = (Function validator) => Keypad(validator: validator);
+var HIDEANDSEEK = (Function validator) => HideAndSeek(validator: validator);
+var STOPANDGO = (Function validator) => StopAndGoTimer(validator: validator);
 
 ClueData C1 = ClueData(
         prompt: "Riddle 1", password: "password1", index: 0, solver: SCANNER),
@@ -33,8 +37,13 @@ ClueData C1 = ClueData(
     C3 = ClueData(
         prompt: "Riddle 3", password: "1234", index: 2, solver: KEYPAD),
     C4 = ClueData(
-        prompt: "Riddle 4", password: "password4", index: 3, solver: SCANNER);
+        prompt: "Riddle 4",
+        password: "password4",
+        index: 3,
+        solver: HIDEANDSEEK),
+    C5 = ClueData(
+        prompt: "Riddle 3", password: "1234", index: 4, solver: STOPANDGO);
 
-List<ClueData> CLUE_DATA = [C1, C2, C3, C4];
+List<ClueData> CLUE_DATA = [C1, C2, C3, C4, C5];
 
 List<bool> clueTracker = List.filled(CLUE_DATA.length, false);

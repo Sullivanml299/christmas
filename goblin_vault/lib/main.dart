@@ -6,7 +6,6 @@ import 'package:goblin_vault/clue_stepper.dart';
 import 'package:goblin_vault/hide_and_seek.dart';
 import 'package:goblin_vault/keypad.dart';
 import 'package:goblin_vault/qr_scanner.dart';
-import 'package:goblin_vault/stop_and_go.dart';
 
 import 'clues.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +44,6 @@ class Home extends StatelessWidget {
         //   elevation: 2,
         //   title: Text("Material Theme Builder"),
         // ),
-        body: HideAndSeek()); //StopAndGo()); //ClueStepper());
+        body: ClueStepper());
   }
 }

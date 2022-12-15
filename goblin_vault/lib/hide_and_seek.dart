@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 class HideAndSeek extends StatefulWidget {
-  const HideAndSeek({super.key});
+  const HideAndSeek({super.key, required this.validator});
+
+  final Function validator;
 
   @override
   State<HideAndSeek> createState() => _HideAndSeekState();
@@ -17,7 +19,9 @@ class _HideAndSeekState extends State<HideAndSeek> {
   );
   Position? position, startPosition;
   double distance = 0;
-  late StreamSubscription<Position> positionStream;
+  StreamSubscription<Position>? positionStream;
+  TextStyle textStyle =
+      TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Colors.green);
 
   @override
   void initState() {
@@ -29,8 +33,37 @@ class _HideAndSeekState extends State<HideAndSeek> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    positionStream?.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(child: Text("$startPosition\n$position\n$distance"));
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _createText("$startPosition"),
+        _createText("$position"),
+        _createText("$distance"),
+      ],
+    ));
+  }
+
+  Widget _createText(String s) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            s,
+            style: textStyle,
+          )
+        ],
+      ),
+    );
   }
 
   /// Determine the current position of the device.
@@ -74,8 +107,13 @@ class _HideAndSeekState extends State<HideAndSeek> {
             .listen((Position? newPosition) {
       setState(() {
         position = newPosition;
-        distance = Geolocator.distanceBetween(startPosition!.latitude,
-            startPosition!.longitude, position!.latitude, position!.longitude);
+        if (startPosition != null) {
+          distance = Geolocator.distanceBetween(
+              startPosition!.latitude,
+              startPosition!.longitude,
+              position!.latitude,
+              position!.longitude);
+        }
       });
     });
 

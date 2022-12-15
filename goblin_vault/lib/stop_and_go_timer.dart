@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class StopAndGoTimer extends StatefulWidget {
-  const StopAndGoTimer({super.key});
+  const StopAndGoTimer({super.key, required this.validator});
+
+  final Function validator;
 
   @override
   State<StopAndGoTimer> createState() => _StopAndGoTimerState();
@@ -43,6 +45,7 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
     for (final subscription in _streamSubscriptions) {
       subscription.cancel();
     }
+    currentTimer?.cancel();
   }
 
   Timer scheduleTimeout([int milliseconds = 10000]) =>
@@ -103,7 +106,9 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return gameState == STOP_GO_STATE.setup ? buildButton() : buildCountDown();
+    return Scaffold(
+      body: gameState == STOP_GO_STATE.setup ? buildButton() : buildCountDown(),
+    );
   }
 
   bool isStopped() {
