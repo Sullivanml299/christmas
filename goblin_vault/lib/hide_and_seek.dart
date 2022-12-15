@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 
 class HideAndSeek extends StatefulWidget {
@@ -14,12 +15,14 @@ class HideAndSeek extends StatefulWidget {
 
 class _HideAndSeekState extends State<HideAndSeek> {
   final LocationSettings locationSettings = const LocationSettings(
-    accuracy: LocationAccuracy.best,
+    accuracy: LocationAccuracy.bestForNavigation,
     // distanceFilter: 100,
   );
   Position? position, startPosition;
   double distance = 0;
+  DISTANCE currentState = DISTANCE.veryFar;
   StreamSubscription<Position>? positionStream;
+  Timer? currentTimer;
   TextStyle textStyle =
       TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Colors.green);
 
@@ -28,7 +31,7 @@ class _HideAndSeekState extends State<HideAndSeek> {
     // TODO: implement initState
     super.initState();
     requestPermission();
-
+    scheduleTimeout(1 * 1000);
     // _determinePosition();
   }
 
@@ -36,10 +39,55 @@ class _HideAndSeekState extends State<HideAndSeek> {
   void dispose() {
     super.dispose();
     positionStream?.cancel();
+    currentTimer?.cancel();
+  }
+
+  Timer scheduleTimeout([int milliseconds = 10000]) =>
+      Timer(Duration(milliseconds: milliseconds), handleTimeout);
+
+  void handleTimeout() {
+    HapticFeedback.vibrate();
+    currentTimer = scheduleTimeout(getTimerDuration());
+  }
+
+  int getTimerDuration() {
+    switch (currentState) {
+      case DISTANCE.veryFar:
+        return 3 * 1000;
+      case DISTANCE.far:
+        return 2 * 1000;
+      case DISTANCE.near:
+        return 1 * 1000;
+      case DISTANCE.close:
+        return 500;
+      case DISTANCE.veryClose:
+        return 100;
+      default:
+        return 3 * 1000;
+    }
+  }
+
+  updateState() {
+    DISTANCE newState = currentState;
+    if (distance < 15) {
+      newState = DISTANCE.veryClose;
+    } else if (distance < 30) {
+      newState = DISTANCE.close;
+    } else if (distance < 60) {
+      newState = DISTANCE.near;
+    } else if (distance < 100) {
+      newState = DISTANCE.far;
+    } else if (distance < 150) {
+      newState = DISTANCE.veryFar;
+    }
+    setState(() {
+      currentState = newState;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    updateState();
     return Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -124,3 +172,5 @@ class _HideAndSeekState extends State<HideAndSeek> {
     startPosition = await Geolocator.getCurrentPosition();
   }
 }
+
+enum DISTANCE { veryFar, far, near, close, veryClose }
