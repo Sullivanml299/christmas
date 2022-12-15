@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:goblin_vault/stop_and_go_timer.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:flutter/services.dart';
 
@@ -21,14 +22,15 @@ class _StopAndGoState extends State<StopAndGo> {
     final userAccelerometer = _userAccelerometerValues
         ?.map((double v) => v.toStringAsFixed(1))
         .toList();
-    // TODO: implement build
-    return Center(
-        child: Container(
-            color: isStopped() ? Colors.green : Colors.red,
-            child: SizedBox(
-              child:
-                  Center(child: Text('UserAccelerometer: $userAccelerometer')),
-            )));
+
+    return StopAndGoTimer();
+    // Center(
+    //     child: Container(
+    //         color: isStopped() ? Colors.green : Colors.red,
+    //         child: SizedBox(
+    //           child:
+    //               Center(child: Text('UserAccelerometer: $userAccelerometer')),
+    //         )));
   }
 
   bool isStopped() {
