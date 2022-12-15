@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:goblin_vault/clock.dart';
 import 'package:goblin_vault/clues.dart';
 import 'package:goblin_vault/qr_scanner.dart';
 
@@ -25,6 +26,7 @@ class _ClueState extends State<Clue> {
     if (password == widget.data.password) {
       widget.notifier();
       tracker[widget.data.index] = true;
+      widget.data.isSolved = true;
       return true;
     }
     return false;
@@ -42,31 +44,38 @@ class _ClueState extends State<Clue> {
             Text(data.prompt),
           ]),
           Row(
-            children: [
-              ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => data.solver(
-                                validate,
-                              )),
-                    );
-                  },
-                  icon: const Icon(Icons.scanner),
-                  label: const Text("scanner"))
-            ],
+            children: [getChallenge()],
           )
-          // Row(
-          //   children: [
-          //     Expanded(
-          //         child: TextField(
-          //             controller: _controller,
-          //             onSubmitted: ((String value) => submit(value)))),
-          //   ],
-          // )
         ],
       ),
     ));
+  }
+
+  Widget getChallenge() {
+    if (widget.data.isSolved) {
+      return const Text(
+        "Challeng Complete!",
+        style: TextStyle(color: Color.fromARGB(255, 0, 251, 255), fontSize: 20),
+      );
+    }
+    return ElevatedButton.icon(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => widget.data.solver(
+                      validate,
+                    )),
+          );
+        },
+        icon: getIcon(widget.data.solver),
+        label: const Text("Begin"));
+  }
+
+  Icon getIcon(Function solver) {
+    if (solver == CLOCK) return const Icon(Icons.access_time_filled);
+    if (solver == SCANNER) return const Icon(Icons.camera);
+    if (solver == KEYPAD) return const Icon(Icons.password);
+    return const Icon(Icons.zoom_out_map);
   }
 }

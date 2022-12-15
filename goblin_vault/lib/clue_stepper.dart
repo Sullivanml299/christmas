@@ -15,14 +15,10 @@ class ClueStepper extends StatefulWidget {
 class _ClueStepperState extends State<ClueStepper> {
   int _index = 0;
   List<bool> isSolved = clueTracker;
-  List<CustomStep>? clues;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      clues = buildClues();
-    });
   }
 
   @override
@@ -31,6 +27,7 @@ class _ClueStepperState extends State<ClueStepper> {
   }
 
   Widget buildStepper() {
+    var clues = buildClues();
     if (clues != null) {
       return CustomStepper(
           currentStep: _index,
@@ -52,7 +49,7 @@ class _ClueStepperState extends State<ClueStepper> {
             cancel();
           },
           onStepContinue: () {
-            if (_index < clues!.length - 1) {
+            if (_index < clues.length - 1) {
               setState(() {
                 _index += 1;
               });
@@ -61,7 +58,7 @@ class _ClueStepperState extends State<ClueStepper> {
           onStepTapped: (int index) {
             tapped(index);
           },
-          steps: clues!);
+          steps: clues);
     }
     return Container();
   }
@@ -91,8 +88,8 @@ class _ClueStepperState extends State<ClueStepper> {
         CustomStep(
             title: Text('Step ${data.index + 1} title'),
             state: CustomStepState.customIcon,
-            customIcon: const Icon(
-              Icons.money,
+            customIcon: Icon(
+              isSolved[data.index] ? Icons.lock_open : Icons.lock,
               size: 18.0,
             ),
             content: Container(

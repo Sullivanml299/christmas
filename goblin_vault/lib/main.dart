@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:goblin_vault/clock.dart';
 import 'package:goblin_vault/clue.dart';
 import 'package:goblin_vault/clue_stepper.dart';
+import 'package:goblin_vault/keypad.dart';
 import 'package:goblin_vault/qr_scanner.dart';
 
 import 'clues.dart';
@@ -9,7 +11,11 @@ import 'package:flutter/material.dart';
 import 'color_schemes.g.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
