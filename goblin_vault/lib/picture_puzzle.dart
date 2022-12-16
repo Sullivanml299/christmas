@@ -15,11 +15,8 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
   int? selected;
   final List<PuzzlePiece> pieces = List.generate(
       12,
-      (index) => PuzzlePiece(
-          Image(
-              fit: BoxFit.contain,
-              image: AssetImage('assets/images/pp$index.jpg')),
-          index: index))
+      (index) =>
+          PuzzlePiece(AssetImage('assets/images/pp$index.jpg'), index: index))
     ..shuffle();
 
   checkSolved() {
@@ -59,23 +56,30 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
   Widget makePiece(int gridIndex) {
     PuzzlePiece piece = pieces[gridIndex];
     return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        splashColor: Colors.red,
-        onTap: () {
-          if (selected == null) {
-            selected = gridIndex;
-          } else if (selected == gridIndex) {
-            setState(() {
-              selected = null;
-            });
-          } else {
-            swap(selected!, gridIndex);
-          }
-        },
-        child: Center(child: piece.image),
-      ),
-    );
+        color: Colors.transparent,
+        child: Ink(
+          decoration: BoxDecoration(
+              border: selected != gridIndex
+                  ? null
+                  : Border.all(color: Colors.green, width: 5),
+              image: DecorationImage(image: piece.image!)),
+          child: InkWell(
+            splashColor: Colors.green,
+            onTap: () {
+              if (selected == null) {
+                setState(() {
+                  selected = gridIndex;
+                });
+              } else if (selected == gridIndex) {
+                setState(() {
+                  selected = null;
+                });
+              } else {
+                swap(selected!, gridIndex);
+              }
+            },
+          ),
+        ));
   }
 
   swap(int idx1, int idx2) {
@@ -100,5 +104,5 @@ class PuzzlePiece {
   const PuzzlePiece(this.image, {required this.index});
 
   final int index;
-  final Image? image;
+  final AssetImage? image;
 }
