@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -23,12 +24,12 @@ class _HideAndSeekState extends State<HideAndSeek> {
   DISTANCE currentState = DISTANCE.veryFar;
   StreamSubscription<Position>? positionStream;
   Timer? currentTimer;
+  final player = AudioPlayer();
   TextStyle textStyle =
       TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Colors.green);
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     requestPermission();
     scheduleTimeout(1 * 1000);
@@ -40,12 +41,15 @@ class _HideAndSeekState extends State<HideAndSeek> {
     super.dispose();
     positionStream?.cancel();
     currentTimer?.cancel();
+    player.release();
+    player.dispose();
   }
 
   Timer scheduleTimeout([int milliseconds = 10000]) =>
       Timer(Duration(milliseconds: milliseconds), handleTimeout);
 
-  void handleTimeout() {
+  void handleTimeout() async {
+    await player.play(AssetSource('sounds/Blip_Select.wav'));
     HapticFeedback.vibrate();
     currentTimer = scheduleTimeout(getTimerDuration());
   }
