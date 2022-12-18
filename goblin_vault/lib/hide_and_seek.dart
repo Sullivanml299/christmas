@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:goblin_vault/positions.dart';
+import 'package:goblin_vault/qr_scanner.dart';
 import 'package:just_audio/just_audio.dart';
 
 class HideAndSeek extends StatefulWidget {
@@ -18,7 +19,6 @@ class HideAndSeek extends StatefulWidget {
 class _HideAndSeekState extends State<HideAndSeek> {
   final LocationSettings locationSettings = const LocationSettings(
     accuracy: LocationAccuracy.bestForNavigation,
-    // distanceFilter: 100,
   );
   bool isSearching = false;
   Position? currentPosition, targetPosition;
@@ -31,6 +31,8 @@ class _HideAndSeekState extends State<HideAndSeek> {
     ..load();
   TextStyle textStyle = const TextStyle(
       fontWeight: FontWeight.bold, fontSize: 10, color: Colors.green);
+  int currentIndex = 0;
+  List<bool> locationStates = List.filled(POSITIONS.length, false);
 
   @override
   void initState() {
@@ -97,47 +99,84 @@ class _HideAndSeekState extends State<HideAndSeek> {
   @override
   Widget build(BuildContext context) {
     updateState();
-    return Center(
-        child: Column(
+    return Scaffold(
+        body: Center(
+            child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: isSearching ? buildSearchDisplay() : buildButtons(),
-    ));
+    )));
   }
 
   List<Widget> buildButtons() {
     List<Widget> buttons = [];
-    int counter = 0;
-    for (Position p in POSITIONS) {
-      buttons.add(ElevatedButton(
-          onPressed: () {
-            setState(() {
-              isSearching = true;
-              targetPosition = p;
-              currentTimer = scheduleTimeout();
-            });
-          },
-          child: Text("Location $counter")));
-      counter++;
+    for (var i = 0; i < POSITIONS.length; i++) {
+      if (locationStates[i]) {
+        buttons.add(Text("FOUND!"));
+      } else {
+        var p = POSITIONS[i];
+        buttons.add(ElevatedButton(
+            onPressed: () {
+              setState(() {
+                isSearching = true;
+                targetPosition = p;
+                currentTimer = scheduleTimeout();
+                currentIndex = i;
+              });
+            },
+            child: Text("Location ${i + 1}")));
+      }
     }
+
+    buttons.add(ElevatedButton.icon(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Scanner(
+                      validator: validateClue,
+                    )),
+          );
+        },
+        icon: const Icon(Icons.camera),
+        label: const Text("Scan")));
+
     return buttons;
   }
 
   List<Widget> buildSearchDisplay() {
     List<Widget> contents = [
       _createText("$currentPosition"),
-      ElevatedButton(
-          onPressed: () {
-            setState(() {
-              isSearching = false;
-              targetPosition = null;
-            });
-          },
-          child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20),
-            child: Text("Back"),
-          ))
+      _createText("${currentState.name}"),
+      Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: ElevatedButton(
+              onPressed: () {
+                currentTimer?.cancel();
+                locationStates[currentIndex] = true;
+                setState(() {
+                  isSearching = false;
+                  targetPosition = null;
+                });
+              },
+              child: const Text("Mark Solved"))),
+      Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: ElevatedButton(
+              onPressed: () {
+                currentTimer?.cancel();
+                setState(() {
+                  isSearching = false;
+                  targetPosition = null;
+                });
+              },
+              child: const Text("Back"))),
     ];
     return contents;
+  }
+
+  validateClue(dynamic password) {
+    var isSolved = widget.validator(password);
+    return isSolved;
   }
 
   Widget _createText(String s) {

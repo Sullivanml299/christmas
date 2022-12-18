@@ -54,7 +54,7 @@ class _ClueState extends State<Clue> {
   Widget getChallenge() {
     if (widget.data.isSolved) {
       return const Text(
-        "Challeng Complete!",
+        "Challenge Complete!",
         style: TextStyle(color: Color.fromARGB(255, 0, 251, 255), fontSize: 20),
       );
     }

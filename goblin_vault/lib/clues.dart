@@ -39,10 +39,7 @@ ClueData C1 = ClueData(
     C3 = ClueData(
         prompt: "Riddle 3", password: "1234", index: 2, solver: KEYPAD),
     C4 = ClueData(
-        prompt: "Riddle 4",
-        password: "password4",
-        index: 3,
-        solver: HIDEANDSEEK),
+        prompt: "Riddle 4", password: "seek", index: 3, solver: HIDEANDSEEK),
     C5 = ClueData(
         prompt: "Riddle 3", password: "1234", index: 4, solver: STOPANDGO),
     C6 = ClueData(prompt: "Riddle 3", password: true, index: 5, solver: PUZZLE);

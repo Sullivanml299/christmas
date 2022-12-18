@@ -55,7 +55,7 @@ class _ScannerState extends State<Scanner> {
               child: (result != null)
                   ? Text(
                       'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  : Text('Tap to start scanning'),
+                  : Text('Scan the code!'),
             ),
           )
         ],
@@ -80,7 +80,7 @@ class _ScannerState extends State<Scanner> {
       setState(() {
         solved = isSolved;
       });
-      Navigator.of(context).pop();
+      Navigator.popUntil(context, ModalRoute.withName('/'));
     }
   }
 
