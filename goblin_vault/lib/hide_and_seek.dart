@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:goblin_vault/positions.dart';
 import 'package:just_audio/just_audio.dart';
 
 class HideAndSeek extends StatefulWidget {
@@ -19,8 +20,9 @@ class _HideAndSeekState extends State<HideAndSeek> {
     accuracy: LocationAccuracy.bestForNavigation,
     // distanceFilter: 100,
   );
-  Position? position, startPosition;
-  double distance = 0;
+  bool isSearching = false;
+  Position? currentPosition, targetPosition;
+  double distance = 1000;
   DISTANCE currentState = DISTANCE.veryFar;
   StreamSubscription<Position>? positionStream;
   Timer? currentTimer;
@@ -34,8 +36,6 @@ class _HideAndSeekState extends State<HideAndSeek> {
   void initState() {
     super.initState();
     requestPermission();
-    init();
-    // _determinePosition();
   }
 
   @override
@@ -46,34 +46,33 @@ class _HideAndSeekState extends State<HideAndSeek> {
     player.dispose();
   }
 
-  init() async {
-    currentTimer = await scheduleTimeout();
-  }
-
-  Future<Timer> scheduleTimeout([int milliseconds = 6000]) async =>
-      Timer.periodic(Duration(milliseconds: milliseconds), (timer) async {
-        await player.play();
-        await player.seek(Duration.zero);
+  Timer scheduleTimeout([int milliseconds = 6000]) =>
+      Timer.periodic(Duration(milliseconds: milliseconds), (timer) {
+        if (!isSearching || currentTimer != timer) {
+          print("CANCELLING");
+          timer.cancel();
+          return;
+        }
+        player.play();
+        player.seek(Duration.zero);
         if (milliseconds != getTimerDuration()) {
           timer.cancel();
-          scheduleTimeout(getTimerDuration());
+          currentTimer = scheduleTimeout(getTimerDuration());
         }
       });
 
   int getTimerDuration() {
     switch (currentState) {
       case DISTANCE.veryFar:
-        return 6000;
-      case DISTANCE.far:
         return 5000;
-      case DISTANCE.near:
+      case DISTANCE.far:
         return 4000;
-      case DISTANCE.close:
+      case DISTANCE.near:
         return 3000;
+      case DISTANCE.close:
+        return 2000;
       case DISTANCE.veryClose:
         return 1000;
-      default:
-        return 3 * 1000;
     }
   }
 
@@ -101,12 +100,44 @@ class _HideAndSeekState extends State<HideAndSeek> {
     return Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _createText("$startPosition"),
-        _createText("$position"),
-        _createText("$distance"),
-      ],
+      children: isSearching ? buildSearchDisplay() : buildButtons(),
     ));
+  }
+
+  List<Widget> buildButtons() {
+    List<Widget> buttons = [];
+    int counter = 0;
+    for (Position p in POSITIONS) {
+      buttons.add(ElevatedButton(
+          onPressed: () {
+            setState(() {
+              isSearching = true;
+              targetPosition = p;
+              currentTimer = scheduleTimeout();
+            });
+          },
+          child: Text("Location $counter")));
+      counter++;
+    }
+    return buttons;
+  }
+
+  List<Widget> buildSearchDisplay() {
+    List<Widget> contents = [
+      _createText("$currentPosition"),
+      ElevatedButton(
+          onPressed: () {
+            setState(() {
+              isSearching = false;
+              targetPosition = null;
+            });
+          },
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Text("Back"),
+          ))
+    ];
+    return contents;
   }
 
   Widget _createText(String s) {
@@ -164,13 +195,13 @@ class _HideAndSeekState extends State<HideAndSeek> {
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position? newPosition) {
       setState(() {
-        position = newPosition;
-        if (startPosition != null) {
+        currentPosition = newPosition;
+        if (targetPosition != null) {
           distance = Geolocator.distanceBetween(
-              startPosition!.latitude,
-              startPosition!.longitude,
-              position!.latitude,
-              position!.longitude);
+              targetPosition!.latitude,
+              targetPosition!.longitude,
+              currentPosition!.latitude,
+              currentPosition!.longitude);
         }
       });
     });
@@ -179,7 +210,7 @@ class _HideAndSeekState extends State<HideAndSeek> {
       positionStream = newPositionStream;
     });
 
-    startPosition = await Geolocator.getCurrentPosition();
+    currentPosition = await Geolocator.getCurrentPosition();
   }
 }
 
