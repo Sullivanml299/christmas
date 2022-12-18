@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:just_audio/just_audio.dart';
 
 class HideAndSeek extends StatefulWidget {
   const HideAndSeek({super.key, required this.validator});
@@ -24,15 +24,17 @@ class _HideAndSeekState extends State<HideAndSeek> {
   DISTANCE currentState = DISTANCE.veryFar;
   StreamSubscription<Position>? positionStream;
   Timer? currentTimer;
-  final player = AudioPlayer();
-  TextStyle textStyle =
-      TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Colors.green);
+  final player = AudioPlayer()
+    ..setAsset('assets/sounds/botw.mp3')
+    ..load();
+  TextStyle textStyle = const TextStyle(
+      fontWeight: FontWeight.bold, fontSize: 10, color: Colors.green);
 
   @override
   void initState() {
     super.initState();
     requestPermission();
-    scheduleTimeout(1 * 1000);
+    init();
     // _determinePosition();
   }
 
@@ -41,31 +43,35 @@ class _HideAndSeekState extends State<HideAndSeek> {
     super.dispose();
     positionStream?.cancel();
     currentTimer?.cancel();
-    player.release();
     player.dispose();
   }
 
-  Timer scheduleTimeout([int milliseconds = 10000]) =>
-      Timer(Duration(milliseconds: milliseconds), handleTimeout);
-
-  void handleTimeout() async {
-    await player.play(AssetSource('sounds/Blip_Select.wav'));
-    HapticFeedback.vibrate();
-    currentTimer = scheduleTimeout(getTimerDuration());
+  init() async {
+    currentTimer = await scheduleTimeout();
   }
+
+  Future<Timer> scheduleTimeout([int milliseconds = 6000]) async =>
+      Timer.periodic(Duration(milliseconds: milliseconds), (timer) async {
+        await player.play();
+        await player.seek(Duration.zero);
+        if (milliseconds != getTimerDuration()) {
+          timer.cancel();
+          scheduleTimeout(getTimerDuration());
+        }
+      });
 
   int getTimerDuration() {
     switch (currentState) {
       case DISTANCE.veryFar:
-        return 3 * 1000;
+        return 6000;
       case DISTANCE.far:
-        return 2 * 1000;
+        return 5000;
       case DISTANCE.near:
-        return 1 * 1000;
+        return 4000;
       case DISTANCE.close:
-        return 500;
+        return 3000;
       case DISTANCE.veryClose:
-        return 100;
+        return 1000;
       default:
         return 3 * 1000;
     }

@@ -39,8 +39,8 @@ dependencies:
   qr_code_scanner: ^1.0.1
   sensors_plus: ^2.0.1
   geolocator: ^9.0.2
-  audioplayers: ^1.1.1
   flutter_draggable_gridview: ^0.0.7
+  just_audio: ^0.9.30
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +66,11 @@ flutter:
 
   assets:
     - assets/sounds/Blip_Select.wav
+    - assets/sounds/botw.mp3
+    - assets/sounds/go.mp3
+    - assets/sounds/ready.mp3
+    - assets/sounds/record.mp3
+    - assets/sounds/stop.mp3
     - assets/images/pp0.jpg
     - assets/images/pp1.jpg
     - assets/images/pp2.jpg

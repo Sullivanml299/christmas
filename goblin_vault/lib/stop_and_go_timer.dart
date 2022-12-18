@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class StopAndGoTimer extends StatefulWidget {
@@ -19,10 +20,22 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
   STOP_GO_STATE gameState = STOP_GO_STATE.setup;
   TextStyle textStyle = TextStyle(
       fontSize: 100, fontWeight: FontWeight.bold, color: Colors.white);
-  double threshold = 0.5;
+  double threshold = 1;
   List<double>? _userAccelerometerValues;
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   Timer? currentTimer;
+  final playerReady = AudioPlayer()
+    ..setAsset('assets/sounds/ready.mp3')
+    ..load();
+  final playerGo = AudioPlayer()
+    ..setAsset('assets/sounds/go.mp3')
+    ..load();
+  final playerStop = AudioPlayer()
+    ..setAsset('assets/sounds/stop.mp3')
+    ..load();
+  final playerReset = AudioPlayer()
+    ..setAsset('assets/sounds/record.mp3')
+    ..load();
 
   @override
   void initState() {
@@ -52,7 +65,7 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
       Timer(Duration(milliseconds: milliseconds), handleTimeout);
 
   void handleTimeout() {
-    STOP_GO_STATE newState;
+    STOP_GO_STATE? newState;
     int duration = 3 * 1000;
     const int SECOND = 1000;
 
@@ -60,20 +73,25 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
       case STOP_GO_STATE.go:
         newState = STOP_GO_STATE.goCountDown;
         duration = SECOND;
+        playerReady.seek(Duration.zero);
+        playerReady.play();
         break;
 
       case STOP_GO_STATE.stop:
         newState = STOP_GO_STATE.stopCountDown;
         duration = SECOND;
+        playerReady.seek(Duration.zero);
+        playerReady.play();
         break;
 
       case STOP_GO_STATE.goCountDown:
         if (countDown <= 0) {
           countDown = countDownMax;
           newState = STOP_GO_STATE.stop;
+          playerStop.seek(Duration.zero);
+          playerStop.play();
         } else {
-          newState = gameState;
-          countDown--;
+          incrementCountDown();
           duration = SECOND;
         }
         break;
@@ -82,15 +100,30 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
         if (countDown <= 0) {
           countDown = countDownMax;
           newState = STOP_GO_STATE.go;
+          playerGo.seek(Duration.zero);
+          playerGo.play();
         } else {
-          newState = gameState;
-          countDown--;
+          incrementCountDown();
           duration = SECOND;
         }
         break;
 
       case STOP_GO_STATE.setup:
-        newState = STOP_GO_STATE.go;
+        playerReady.seek(Duration.zero);
+        playerReady.play();
+        newState = STOP_GO_STATE.first;
+        break;
+
+      case STOP_GO_STATE.first:
+        if (countDown <= 0) {
+          countDown = countDownMax;
+          newState = STOP_GO_STATE.go;
+          playerGo.seek(Duration.zero);
+          playerGo.play();
+        } else {
+          incrementCountDown();
+          duration = SECOND;
+        }
         break;
 
       default:
@@ -100,8 +133,15 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
 
     setState(() {
       currentTimer = scheduleTimeout(duration);
-      gameState = newState;
+      if (newState != null) gameState = newState;
     });
+  }
+
+  incrementCountDown() {
+    print("increment");
+    countDown--;
+    playerReady.seek(Duration.zero);
+    playerReady.play();
   }
 
   @override
@@ -129,9 +169,12 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
       currentTimer?.cancel();
       currentTimer ??= null;
     });
+    playerReset.seek(Duration.zero);
+    playerReset.play();
   }
 
   Widget buildCountDown() {
+    print(gameState);
     if ((gameState == STOP_GO_STATE.stop ||
             gameState == STOP_GO_STATE.stopCountDown) &&
         !isStopped()) {
@@ -139,7 +182,8 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
     }
 
     Text text = (gameState == STOP_GO_STATE.goCountDown ||
-            gameState == STOP_GO_STATE.stopCountDown)
+            gameState == STOP_GO_STATE.stopCountDown ||
+            gameState == STOP_GO_STATE.first)
         ? Text(
             "${countDown + 1}",
             style: textStyle,
@@ -156,21 +200,27 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
 
     return Center(
         child: Container(
-            color: gameState == STOP_GO_STATE.go ||
-                    gameState == STOP_GO_STATE.goCountDown
-                ? Colors.green
-                : Colors.red,
+            color: getColor(),
             child: SizedBox(
               child: Center(child: text),
             )));
+  }
+
+  Color getColor() {
+    if (gameState == STOP_GO_STATE.first) return Colors.blue;
+    if (gameState == STOP_GO_STATE.goCountDown || gameState == STOP_GO_STATE.go)
+      return Colors.green;
+    return Colors.red;
   }
 
   Widget buildButton() {
     return Center(
         child: ElevatedButton(
             onPressed: () {
+              playerReady.seek(Duration.zero);
+              playerReady.play();
               setState(() {
-                gameState = STOP_GO_STATE.stopCountDown;
+                gameState = STOP_GO_STATE.first;
                 currentTimer = scheduleTimeout(1000);
               });
             },
@@ -180,6 +230,7 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
 
 enum STOP_GO_STATE {
   setup,
+  first,
   stop,
   go,
   goCountDown,

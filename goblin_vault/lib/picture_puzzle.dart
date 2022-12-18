@@ -13,18 +13,19 @@ class PicturePuzzle extends StatefulWidget {
 }
 
 class _PicturePuzzleState extends State<PicturePuzzle> {
-  int? selected;
+  double distance = 10;
+  bool isSolved = false;
   final List<PuzzlePiece> pieces = List.generate(
       12,
       (index) =>
           PuzzlePiece(AssetImage('assets/images/pp$index.jpg'), index: index))
     ..shuffle();
 
-  checkSolved() {
+  bool checkSolved() {
     for (var i = 0; i < pieces.length; i++) {
-      if (i != pieces[i].index) return;
+      if (i != pieces[i].index) return false;
     }
-    validateClue(true);
+    return true;
   }
 
   @override
@@ -41,10 +42,10 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
 
   Widget gridBuilder() {
     return DraggableGridViewBuilder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
+        mainAxisSpacing: distance,
+        crossAxisSpacing: distance,
         // childAspectRatio: MediaQuery.of(context).size.width /
         //     (MediaQuery.of(context).size.height / 3),
       ),
@@ -54,6 +55,12 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
       dragCompletion:
           (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {
         swap(beforeIndex, afterIndex);
+        if (!isSolved && checkSolved()) {
+          setState(() {
+            isSolved = true;
+          });
+        }
+        if (isSolved) validateClue(true);
       },
       dragFeedback: (List<DraggableGridItem> list, int index) {
         return Container(
@@ -70,19 +77,6 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
         );
       },
     );
-
-    // return GridView.builder(
-    //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-    //     crossAxisCount: 3,
-    //     crossAxisSpacing: 10,
-    //     mainAxisSpacing: 10,
-    //   ),
-    //   shrinkWrap: true,
-    //   itemCount: pieces.length,
-    //   itemBuilder: (context, index) {
-    //     return makePiece(index);
-    //   },
-    // );
   }
 
   List<DraggableGridItem> listBuilder() {
@@ -102,40 +96,10 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
         ));
   }
 
-  // Widget makePiece(int gridIndex) {
-  //   PuzzlePiece piece = pieces[gridIndex];
-  //   return Material(
-  //       color: Colors.transparent,
-  //       child: Ink(
-  //         decoration: BoxDecoration(
-  //             border: selected != gridIndex
-  //                 ? null
-  //                 : Border.all(color: Colors.green, width: 5),
-  //             image: DecorationImage(image: piece.image!)),
-  //         child: InkWell(
-  //           splashColor: Colors.green,
-  //           onTap: () {
-  //             if (selected == null) {
-  //               setState(() {
-  //                 selected = gridIndex;
-  //               });
-  //             } else if (selected == gridIndex) {
-  //               setState(() {
-  //                 selected = null;
-  //               });
-  //             } else {
-  //               swap(selected!, gridIndex);
-  //             }
-  //           },
-  //         ),
-  //       ));
-  // }
-
   swap(int idx1, int idx2) {
     var temp = pieces[idx1];
     pieces[idx1] = pieces[idx2];
     pieces[idx2] = temp;
-    checkSolved();
   }
 
   validateClue(dynamic password) {
