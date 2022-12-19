@@ -406,16 +406,17 @@ class _StepperState extends State<CustomStepper> with TickerProviderStateMixin {
   }
 
   Color _circleColor(int index) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    if (!_isDark()) {
-      return widget.steps[index].isActive
-          ? colorScheme.primary
-          : colorScheme.onSurface.withOpacity(0.38);
-    } else {
-      return widget.steps[index].isActive
-          ? colorScheme.secondary
-          : colorScheme.background;
-    }
+    // final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    // if (!_isDark()) {
+    //   return widget.steps[index].isActive
+    //       ? colorScheme.primary
+    //       : colorScheme.onSurface.withOpacity(0.38);
+    // } else {
+    //   return widget.steps[index].isActive
+    //       ? colorScheme.secondary
+    //       : colorScheme.background;
+    // }
+    return Colors.transparent;
   }
 
   Widget _buildCircle(int index, bool oldState) {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:goblin_vault/qr_scanner.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
@@ -138,7 +139,6 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
   }
 
   incrementCountDown() {
-    print("increment");
     countDown--;
     playerReady.seek(Duration.zero);
     playerReady.play();
@@ -215,7 +215,11 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
 
   Widget buildButton() {
     return Center(
-        child: ElevatedButton(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ElevatedButton(
             onPressed: () {
               playerReady.seek(Duration.zero);
               playerReady.play();
@@ -224,7 +228,26 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
                 currentTimer = scheduleTimeout(1000);
               });
             },
-            child: Text("Start")));
+            child: Text("Start")),
+        ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Scanner(
+                          validator: validateClue,
+                        )),
+              );
+            },
+            icon: const Icon(Icons.camera),
+            label: const Text("Scan"))
+      ],
+    ));
+  }
+
+  validateClue(dynamic password) {
+    var isSolved = widget.validator(password);
+    return isSolved;
   }
 }
 
