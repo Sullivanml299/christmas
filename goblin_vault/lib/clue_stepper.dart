@@ -88,10 +88,7 @@ class _ClueStepperState extends State<ClueStepper> {
         CustomStep(
             title: Text('Step ${data.index + 1} title'),
             state: CustomStepState.customIcon,
-            customIcon: Icon(
-              isSolved[data.index] ? Icons.lock_open : Icons.lock,
-              size: 18.0,
-            ),
+            customIcon: buildIcon(data.index),
             content: Container(
               alignment: Alignment.centerLeft,
               child: Clue(
@@ -102,5 +99,18 @@ class _ClueStepperState extends State<ClueStepper> {
       );
     }
     return clues;
+  }
+
+  Widget buildIcon(int index) {
+    if (index == _index) {
+      return const Image(
+        image: AssetImage('assets/images/goblin.gif'),
+        fit: BoxFit.scaleDown,
+      );
+    }
+    return Icon(
+      isSolved[index] ? Icons.lock_open : Icons.lock,
+      size: 18.0,
+    );
   }
 }
