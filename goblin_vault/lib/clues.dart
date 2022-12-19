@@ -3,6 +3,7 @@ import 'package:goblin_vault/clue.dart';
 import 'package:goblin_vault/hide_and_seek.dart';
 import 'package:goblin_vault/keypad.dart';
 import 'package:goblin_vault/picture_puzzle.dart';
+import 'package:goblin_vault/planet_puzzle.dart';
 import 'package:goblin_vault/qr_scanner.dart';
 import 'package:goblin_vault/stop_and_go_timer.dart';
 
@@ -28,6 +29,7 @@ var KEYPAD = (Function validator) => Keypad(validator: validator);
 var HIDEANDSEEK = (Function validator) => HideAndSeek(validator: validator);
 var STOPANDGO = (Function validator) => StopAndGoTimer(validator: validator);
 var PUZZLE = (Function validator) => PicturePuzzle(validator: validator);
+var PLANETPUZZLE = (Function validator) => PlanetPuzzle(validator: validator);
 
 ClueData C1 = ClueData(
         prompt: "Riddle 2",
@@ -40,8 +42,10 @@ ClueData C1 = ClueData(
         prompt: "Riddle 4", password: "seek", index: 2, solver: HIDEANDSEEK),
     C4 = ClueData(
         prompt: "Riddle 3", password: "stopgo", index: 3, solver: STOPANDGO),
-    C5 = ClueData(prompt: "Riddle 3", password: true, index: 4, solver: PUZZLE);
+    C5 = ClueData(prompt: "Riddle 3", password: true, index: 4, solver: PUZZLE),
+    C6 = ClueData(
+        prompt: "Riddle 3", password: true, index: 5, solver: PLANETPUZZLE);
 
-List<ClueData> CLUE_DATA = [C1, C2, C3, C4, C5];
+List<ClueData> CLUE_DATA = [C1, C2, C3, C4, C5, C6];
 
 List<bool> clueTracker = List.filled(CLUE_DATA.length, false);

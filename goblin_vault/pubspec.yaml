@@ -72,6 +72,15 @@ flutter:
     - assets/sounds/record.mp3
     - assets/sounds/stop.mp3
     - assets/images/goblin.gif
+    - assets/images/sun.png
+    - assets/images/mercury.png
+    - assets/images/venus.png
+    - assets/images/earth.png
+    - assets/images/mars.png
+    - assets/images/jupiter.png
+    - assets/images/saturn.png
+    - assets/images/uranus.png
+    - assets/images/neptune.png
     - assets/images/pp0.jpg
     - assets/images/pp1.jpg
     - assets/images/pp2.jpg

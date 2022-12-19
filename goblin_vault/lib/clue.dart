@@ -79,6 +79,7 @@ class _ClueState extends State<Clue> {
     if (solver == STOPANDGO) return const Icon(Icons.preview);
     if (solver == HIDEANDSEEK) return const Icon(Icons.my_location);
     if (solver == PUZZLE) return const Icon(Icons.image);
+    if (solver == PLANETPUZZLE) return const Icon(Icons.sunny);
     return const Icon(Icons.zoom_out_map);
   }
 }
