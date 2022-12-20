@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:goblin_vault/particle_canvas.dart';
 import 'package:goblin_vault/positions.dart';
 import 'package:goblin_vault/qr_scanner.dart';
 import 'package:just_audio/just_audio.dart';
@@ -145,7 +146,12 @@ class _HideAndSeekState extends State<HideAndSeek> {
 
   List<Widget> buildSearchDisplay() {
     List<Widget> contents = [
-      _createText("$currentPosition"),
+      SizedBox(
+        height: MediaQuery.of(context).size.height * .7,
+        width: MediaQuery.of(context).size.width,
+        child: ParticleCanvas(distance: currentState),
+      ),
+      // _createText("$currentPosition"),
       _createText("${currentState.name}"),
       Padding(
           padding: EdgeInsets.symmetric(vertical: 20),
@@ -252,5 +258,3 @@ class _HideAndSeekState extends State<HideAndSeek> {
     currentPosition = await Geolocator.getCurrentPosition();
   }
 }
-
-enum DISTANCE { veryFar, far, near, close, veryClose }

@@ -72,6 +72,7 @@ flutter:
     - assets/sounds/record.mp3
     - assets/sounds/stop.mp3
     - assets/images/bottle.png
+    - assets/images/bottle_better.png
     - assets/images/goblin.gif
     - assets/images/sun.png
     - assets/images/mercury.png

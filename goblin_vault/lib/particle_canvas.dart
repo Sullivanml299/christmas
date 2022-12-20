@@ -7,7 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';
 
 class ParticleCanvas extends StatefulWidget {
-  const ParticleCanvas({super.key});
+  ParticleCanvas({required this.distance, super.key});
+
+  DISTANCE distance;
 
   @override
   State<ParticleCanvas> createState() => _ParticleCanvasState();
@@ -58,16 +60,16 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
   }
 
   setBottle(Size size) async {
-    var b = await loadUiImage("assets/images/bottle.png");
+    var b = await loadUiImage("assets/images/bottle_better.png");
     setState(() {
       bottle = b;
     });
     for (Particle p in particles) {
       p.setBoundaries(
-          size.width * .5 - b.width / 2.3 * scale,
-          size.width * .5 + b.width / 2.3 * scale,
+          size.width * .5 - b.width / 2.5 * scale,
+          size.width * .5 + b.width / 2.5 * scale,
           size.height * .5 - b.height / 7 * scale,
-          size.height * .5 + b.height / 2.3 * scale);
+          size.height * .5 + b.height / 2.5 * scale);
     }
   }
 
@@ -214,3 +216,5 @@ enum ParticleType {
   fly,
   trail,
 }
+
+enum DISTANCE { veryFar, far, near, close, veryClose }
