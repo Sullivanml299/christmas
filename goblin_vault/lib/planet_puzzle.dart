@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_draggable_gridview/flutter_draggable_gridview.dart';
+import 'package:goblin_vault/celebration_overlay.dart';
 import 'package:goblin_vault/planet_data.dart';
 
 class PlanetPuzzle extends StatefulWidget {
@@ -27,7 +28,9 @@ class _PlanetPuzzleState extends State<PlanetPuzzle> {
 
   @override
   Widget build(BuildContext context) {
-    return buildPuzzle();
+    return isSolved
+        ? CelebrationOverlay(quarterTurns: 1, child: buildPuzzle())
+        : buildPuzzle();
   }
 
   Widget buildPuzzle() {
@@ -110,8 +113,8 @@ class _PlanetPuzzleState extends State<PlanetPuzzle> {
 
   validateClue(dynamic password) {
     var isSolved = widget.validator(password);
-    if (isSolved) {
-      Navigator.of(context).pop();
-    }
+    // if (isSolved) {
+    //   Navigator.of(context).pop();
+    // }
   }
 }

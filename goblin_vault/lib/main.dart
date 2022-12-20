@@ -43,6 +43,6 @@ class Home extends StatelessWidget {
         //   elevation: 2,
         //   title: Text("Material Theme Builder"),
         // ),
-        body: ParticleCanvas()); //ClueStepper());
+        body: ClueStepper());
   }
 }
