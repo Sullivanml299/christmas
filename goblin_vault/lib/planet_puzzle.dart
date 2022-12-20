@@ -18,25 +18,8 @@ class _PlanetPuzzleState extends State<PlanetPuzzle> {
   bool isSolved = false;
   final List<SolarPuzzlePiece> pieces = [...PLANETS]..shuffle();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print("init");
-    for (SolarPuzzlePiece p in pieces) {
-      print(p.name);
-    }
-  }
-
   bool checkSolved() {
-    print("//////////TEST1");
-    for (SolarPuzzlePiece p in pieces) {
-      print(p.name);
-    }
-
-    print("////////////TEST2");
     for (var i = 0; i < pieces.length; i++) {
-      print(pieces[i].name);
       if (i != pieces[i].index) return false;
     }
     return true;

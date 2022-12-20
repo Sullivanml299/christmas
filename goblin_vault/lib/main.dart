@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:goblin_vault/clue_stepper.dart';
+import 'package:goblin_vault/particle_canvas.dart';
 
 import 'color_schemes.g.dart';
 
@@ -42,6 +43,6 @@ class Home extends StatelessWidget {
         //   elevation: 2,
         //   title: Text("Material Theme Builder"),
         // ),
-        body: ClueStepper());
+        body: ParticleCanvas()); //ClueStepper());
   }
 }

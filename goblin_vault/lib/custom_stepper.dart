@@ -723,7 +723,7 @@ class _StepperState extends State<CustomStepper> with TickerProviderStateMixin {
           secondChild: Container(
             margin: widget.margin ??
                 const EdgeInsetsDirectional.only(
-                  start: 100.0,
+                  start: _kStepSize + 60.0,
                   end: 24.0,
                   bottom: 24.0,
                 ),
