@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_draggable_gridview/flutter_draggable_gridview.dart';
+import 'package:goblin_vault/grid/flutter_draggable_gridview.dart';
 
 class PicturePuzzle extends StatefulWidget {
   const PicturePuzzle({super.key, required this.validator});

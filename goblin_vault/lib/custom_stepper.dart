@@ -108,7 +108,7 @@ const Color _kCircleActiveLight = Colors.white;
 const Color _kCircleActiveDark = Colors.black87;
 const Color _kDisabledLight = Colors.black38;
 const Color _kDisabledDark = Colors.white38;
-const double _kStepSize = 24.0;
+const double _kStepSize = 48; //24.0;
 const double _kTriangleHeight =
     _kStepSize * 0.866025; // Triangle height. sqrt(3.0) / 2.0
 
@@ -707,7 +707,7 @@ class _StepperState extends State<CustomStepper> with TickerProviderStateMixin {
           top: 0.0,
           bottom: 0.0,
           child: SizedBox(
-            width: 24.0,
+            width: _kStepSize,
             child: Center(
               child: SizedBox(
                 width: _isLast(index) ? 0.0 : 1.0,
@@ -723,7 +723,7 @@ class _StepperState extends State<CustomStepper> with TickerProviderStateMixin {
           secondChild: Container(
             margin: widget.margin ??
                 const EdgeInsetsDirectional.only(
-                  start: 60.0,
+                  start: 100.0,
                   end: 24.0,
                   bottom: 24.0,
                 ),

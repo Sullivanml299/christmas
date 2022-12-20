@@ -18,8 +18,25 @@ class _PlanetPuzzleState extends State<PlanetPuzzle> {
   bool isSolved = false;
   final List<SolarPuzzlePiece> pieces = [...PLANETS]..shuffle();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("init");
+    for (SolarPuzzlePiece p in pieces) {
+      print(p.name);
+    }
+  }
+
   bool checkSolved() {
+    print("//////////TEST1");
+    for (SolarPuzzlePiece p in pieces) {
+      print(p.name);
+    }
+
+    print("////////////TEST2");
     for (var i = 0; i < pieces.length; i++) {
+      print(pieces[i].name);
       if (i != pieces[i].index) return false;
     }
     return true;
@@ -52,7 +69,7 @@ class _PlanetPuzzleState extends State<PlanetPuzzle> {
       isOnlyLongPress: false,
       dragCompletion:
           (List<DraggableGridItem> list, int beforeIndex, int afterIndex) {
-        swap(beforeIndex, afterIndex);
+        insert(beforeIndex, afterIndex);
         if (!isSolved && checkSolved()) {
           setState(() {
             isSolved = true;
@@ -102,10 +119,10 @@ class _PlanetPuzzleState extends State<PlanetPuzzle> {
         )));
   }
 
-  swap(int idx1, int idx2) {
+  insert(int idx1, int idx2) {
     var temp = pieces[idx1];
-    pieces[idx1] = pieces[idx2];
-    pieces[idx2] = temp;
+    pieces.removeAt(idx1);
+    pieces.insert(idx2, temp);
   }
 
   validateClue(dynamic password) {
