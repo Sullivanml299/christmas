@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:goblin_vault/clue_stepper.dart';
 import 'package:goblin_vault/particle_canvas.dart';
+import 'package:goblin_vault/rock_chart.dart';
 
 import 'color_schemes.g.dart';
 

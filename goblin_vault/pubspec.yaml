@@ -95,6 +95,25 @@ flutter:
     - assets/images/pp9.jpg
     - assets/images/pp10.jpg
     - assets/images/pp11.jpg
+    - assets/stones/amethyst.jpg
+    - assets/stones/beryl.jpg
+    - assets/stones/blue_agate.jpg
+    - assets/stones/blue_turqoise.jpg
+    - assets/stones/clear_crystal.jpg
+    - assets/stones/red_agate.jpg
+    - assets/stones/red_carnelian.jpg
+    - assets/stones/rose_crystal.jpg
+    - assets/stones/snowflake_obsidian.jpg
+    - assets/stones/wrong0.jpg
+    - assets/stones/wrong1.jpg
+    - assets/stones/wrong2.jpg
+    - assets/stones/wrong3.jpg
+    - assets/stones/wrong4.jpg
+    - assets/stones/wrong5.jpg
+    - assets/stones/wrong6.jpg
+    - assets/stones/wrong7.jpg
+    - assets/stones/yellow_quartz.jpg
+    - assets/stones/zoisite.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

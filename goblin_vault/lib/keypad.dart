@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:goblin_vault/rock_chart.dart';
 
 class Keypad extends StatefulWidget {
   const Keypad({super.key, required this.validator});
@@ -15,28 +16,74 @@ class _KeypadState extends State<Keypad> {
   int index = 0;
   TextStyle keyStyle =
       const TextStyle(fontSize: 80, fontWeight: FontWeight.bold);
+  bool showKeypad = false;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        color: Colors.green,
-        child: Column(
-          children: [
-            Padding(
-                padding: const EdgeInsets.fromLTRB(0, 130, 0, 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    makeCodeEntry(code[0]),
-                    makeCodeEntry(code[1]),
-                    makeCodeEntry(code[2]),
-                    makeCodeEntry(code[3]),
-                  ],
-                )),
-            gridBuilder(),
-          ],
-        ));
+    return showKeypad ? makeKeypad() : buildButtons();
+  }
+
+  Widget buildButtons() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+              onPressed: () {
+                print("PRESSED");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RockChart(),
+                  ),
+                );
+              },
+              child: Text("Chart")),
+          ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  showKeypad = true;
+                });
+              },
+              child: Text("Keypad"))
+        ],
+      ),
+    );
+  }
+
+  Widget makeKeypad() {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        leading: InkWell(
+          onTap: () {
+            setState(() {
+              showKeypad = false;
+            });
+          },
+          child: Icon(Icons.arrow_back),
+        ),
+      ),
+      body: Card(
+          color: Colors.green,
+          child: Column(
+            children: [
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 50, 0, 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      makeCodeEntry(code[0]),
+                      makeCodeEntry(code[1]),
+                      makeCodeEntry(code[2]),
+                      makeCodeEntry(code[3]),
+                    ],
+                  )),
+              gridBuilder(),
+            ],
+          )),
+    );
   }
 
   GridView gridBuilder() {
