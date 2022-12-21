@@ -81,9 +81,9 @@ class _HideAndSeekState extends State<HideAndSeek> {
 
   updateState() {
     DISTANCE newState = currentState;
-    if (distance < 15) {
+    if (distance < 20) {
       newState = DISTANCE.veryClose;
-    } else if (distance < 30) {
+    } else if (distance < 40) {
       newState = DISTANCE.close;
     } else if (distance < 60) {
       newState = DISTANCE.near;
@@ -152,30 +152,35 @@ class _HideAndSeekState extends State<HideAndSeek> {
         child: ParticleCanvas(distance: currentState),
       ),
       // _createText("$currentPosition"),
-      _createText("${currentState.name}"),
-      Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: ElevatedButton(
-              onPressed: () {
-                currentTimer?.cancel();
-                locationStates[currentIndex] = true;
-                setState(() {
-                  isSearching = false;
-                  targetPosition = null;
-                });
-              },
-              child: const Text("Mark Solved"))),
-      Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: ElevatedButton(
-              onPressed: () {
-                currentTimer?.cancel();
-                setState(() {
-                  isSearching = false;
-                  targetPosition = null;
-                });
-              },
-              child: const Text("Back"))),
+      // _createText("${currentState.name}"),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: ElevatedButton(
+                  onPressed: () {
+                    currentTimer?.cancel();
+                    locationStates[currentIndex] = true;
+                    setState(() {
+                      isSearching = false;
+                      targetPosition = null;
+                    });
+                  },
+                  child: const Text("Mark Solved"))),
+          Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: ElevatedButton(
+                  onPressed: () {
+                    currentTimer?.cancel();
+                    setState(() {
+                      isSearching = false;
+                      targetPosition = null;
+                    });
+                  },
+                  child: const Text("Back"))),
+        ],
+      )
     ];
     return contents;
   }

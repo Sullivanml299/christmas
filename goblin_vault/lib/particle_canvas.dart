@@ -16,12 +16,15 @@ class ParticleCanvas extends StatefulWidget {
 }
 
 class _ParticleCanvasState extends State<ParticleCanvas> {
-  List<Particle> particles =
-      List.generate(3, (index) => Particle(type: ParticleType.fly));
+  List<Particle> particles = List.generate(
+      3,
+      (index) => Particle(
+          type: ParticleType.fly, color: UI.Color.fromARGB(255, 16, 164, 43)));
   double maxVelocity = 2;
-  double scale = 2;
+  double scale = 4;
   late Timer timer;
   UI.Image? bottle;
+  late ValueNotifier<DISTANCE> distanceListener;
 
   @override
   void initState() {
@@ -30,8 +33,7 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
     setBottle(size);
     for (Particle p in particles) {
       p.setPosition(size.width / 2, size.height / 2);
-      p.setVelocities(
-          getRandomDouble(maxVelocity), getRandomDouble(maxVelocity));
+      p.setVelocities(getVelocity(), getVelocity());
     }
 
     timer = Timer.periodic(Duration(milliseconds: 16), (timer) {
@@ -42,20 +44,68 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
       }
       particles.removeWhere((p) => p.alpha <= 0);
       particles.addAll(trails);
-      setState(() {});
+      setState(() {
+        distanceListener.value = widget.distance;
+      });
     });
+    distanceListener = ValueNotifier(widget.distance);
+    distanceListener.addListener(updateBehavior);
   }
 
-  getRandomDouble(double max) {
+  updateBehavior() {
+    for (Particle p in particles) {
+      if (p.type == ParticleType.fly) {
+        p.setVelocities(getVelocity(), getVelocity());
+        p.color = getColor();
+      }
+    }
+  }
+
+  double getVelocity() {
+    switch (widget.distance) {
+      case DISTANCE.veryClose:
+        return getRandomDouble(2, 3);
+      case DISTANCE.close:
+        return getRandomDouble(0.6, 1);
+      case DISTANCE.near:
+        return getRandomDouble(0.5, 0.6);
+      case DISTANCE.far:
+        return getRandomDouble(0.3, 0.4);
+      case DISTANCE.veryFar:
+        return getRandomDouble(0.2, 0.3);
+      default:
+        return getRandomDouble(0.1, 0.2);
+    }
+  }
+
+  Color getColor() {
+    switch (widget.distance) {
+      case DISTANCE.veryClose:
+        return UI.Color.fromARGB(255, 242, 0, 255);
+      case DISTANCE.close:
+        return UI.Color.fromARGB(255, 0, 251, 255);
+      case DISTANCE.near:
+        return UI.Color.fromARGB(255, 9, 214, 166);
+      case DISTANCE.far:
+        return UI.Color.fromARGB(255, 13, 193, 97);
+      case DISTANCE.veryFar:
+        return UI.Color.fromARGB(255, 16, 164, 43);
+      default:
+        return UI.Color.fromARGB(255, 0, 225, 255);
+    }
+  }
+
+  getRandomDouble(double min, double max) {
     var rng = Random();
     var sign = rng.nextBool() ? 1 : -1;
-    var val = sign * rng.nextDouble() * max;
+    var val = sign * (min + rng.nextDouble() * max);
     return val;
   }
 
   getTrail(Particle p) {
-    Particle trail = Particle(type: ParticleType.trail);
-    trail.setPosition(p.x + getRandomDouble(2), p.y + getRandomDouble(2));
+    Particle trail = Particle(type: ParticleType.trail, color: getColor());
+    trail.setPosition(
+        p.x + getVelocity() * scale / 2, p.y + getVelocity() * scale / 2);
     return trail;
   }
 
@@ -66,10 +116,10 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
     });
     for (Particle p in particles) {
       p.setBoundaries(
-          size.width * .5 - b.width / 2.5 * scale,
-          size.width * .5 + b.width / 2.5 * scale,
-          size.height * .5 - b.height / 7 * scale,
-          size.height * .5 + b.height / 2.5 * scale);
+          size.width * .5 - b.width / 2.6 * scale, // left
+          size.width * .5 + b.width / 2.6 * scale, // right
+          size.height * .5 - b.height / 7.1 * scale, // top
+          size.height * .5 + b.height / 2.6 * scale); // bottom
     }
   }
 
@@ -116,8 +166,8 @@ class FireFlyPainter extends CustomPainter {
           scale: 1 / uiScale,
           rect: Rect.fromCenter(
               center: Offset(size.width / 2, size.height / 2),
-              width: size.width / 2,
-              height: size.height / 2),
+              width: size.width / 2 * uiScale,
+              height: size.height / 2 * uiScale),
           image: bottle!);
     }
   }
@@ -127,9 +177,10 @@ class FireFlyPainter extends CustomPainter {
     for (Particle p in particles) {
       canvas.drawCircle(
           Offset(p.x, p.y),
-          p.radius,
+          p.radius * uiScale,
           Paint()
-            ..color = Color.fromARGB((p.alpha * 150).round(), 196, 255, 46));
+            ..color = Color.fromARGB((p.alpha * 150).round(), p.color.red,
+                p.color.green, p.color.blue));
     }
   }
 
@@ -138,7 +189,7 @@ class FireFlyPainter extends CustomPainter {
 }
 
 class Particle {
-  Particle({required this.type});
+  Particle({required this.type, required this.color});
 
   double x = 0,
       y = 0,
@@ -151,6 +202,7 @@ class Particle {
       minY = 0,
       alpha = 1,
       alphaDecay = 0.01;
+  Color color;
 
   ParticleType type;
 
