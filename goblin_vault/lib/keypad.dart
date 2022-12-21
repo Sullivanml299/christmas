@@ -20,7 +20,10 @@ class _KeypadState extends State<Keypad> {
 
   @override
   Widget build(BuildContext context) {
-    return showKeypad ? makeKeypad() : buildButtons();
+    return Scaffold(
+      appBar: showKeypad ? null : AppBar(backgroundColor: Colors.black),
+      body: showKeypad ? makeKeypad() : buildButtons(),
+    );
   }
 
   Widget buildButtons() {
@@ -30,7 +33,6 @@ class _KeypadState extends State<Keypad> {
         children: [
           ElevatedButton(
               onPressed: () {
-                print("PRESSED");
                 Navigator.push(
                   context,
                   MaterialPageRoute(

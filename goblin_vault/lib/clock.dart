@@ -15,12 +15,15 @@ class _ClockState extends State<Clock> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: ElevatedButton(
-            onPressed: () => showClock(),
-            child: time == null
-                ? const Text("Access Clock")
-                : Text(time.toString())));
+    return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.black),
+      body: Center(
+          child: ElevatedButton(
+              onPressed: () => showClock(),
+              child: time == null
+                  ? const Text("Access Clock")
+                  : Text(time.toString()))),
+    );
   }
 
   showClock() async {

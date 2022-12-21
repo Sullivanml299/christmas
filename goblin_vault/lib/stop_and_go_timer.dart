@@ -147,6 +147,7 @@ class _StopAndGoTimerState extends State<StopAndGoTimer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.black),
       body: gameState == STOP_GO_STATE.setup ? buildButton() : buildCountDown(),
     );
   }

@@ -101,11 +101,12 @@ class _HideAndSeekState extends State<HideAndSeek> {
   Widget build(BuildContext context) {
     updateState();
     return Scaffold(
+        appBar: AppBar(backgroundColor: Colors.black),
         body: Center(
             child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: isSearching ? buildSearchDisplay() : buildButtons(),
-    )));
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: isSearching ? buildSearchDisplay() : buildButtons(),
+        )));
   }
 
   List<Widget> buildButtons() {
