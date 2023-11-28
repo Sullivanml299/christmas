@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:goblin_vault/puzzles/hide-and-seek/particle_canvas.dart';
-import 'package:goblin_vault/positions.dart';
+import 'package:goblin_vault/puzzles/hide-and-seek/positions.dart';
 import 'package:goblin_vault/common/qr_scanner.dart';
 import 'package:just_audio/just_audio.dart';
 
