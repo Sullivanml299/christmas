@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:goblin_vault/clue_stepper.dart';
-import 'package:goblin_vault/particle_canvas.dart';
-import 'package:goblin_vault/rock_chart.dart';
+import 'package:goblin_vault/common/clue_stepper.dart';
 
-import 'color_schemes.g.dart';
+import 'config/color_schemes.g.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,11 +37,6 @@ class Home extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        // appBar: AppBar(
-        //   elevation: 2,
-        //   title: Text("Material Theme Builder"),
-        // ),
-        body: ClueStepper());
+    return const Scaffold(body: ClueStepper());
   }
 }

@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:goblin_vault/rock_chart.dart';
+import 'package:goblin_vault/puzzles/rocks/rock_chart.dart';
 
 class Keypad extends StatefulWidget {
   const Keypad({super.key, required this.validator});

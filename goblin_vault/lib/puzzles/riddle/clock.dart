@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Clock extends StatefulWidget {
@@ -12,17 +11,40 @@ class Clock extends StatefulWidget {
 
 class _ClockState extends State<Clock> {
   TimeOfDay? time;
-
+  bool showHint = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.black),
       body: Center(
-          child: ElevatedButton(
-              onPressed: () => showClock(),
-              child: time == null
-                  ? const Text("Access Clock")
-                  : Text(time.toString()))),
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+              child: Text(
+                  "An odd set of twins wanted to play music and sing. They both had violins, but one was missing a string."),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 50),
+              child: ElevatedButton(
+                  onPressed: () => showClock(),
+                  child: time == null
+                      ? const Text("Access Clock")
+                      : const Text("Try Again")),
+            ),
+            showHint
+                ? const Text(
+                    "Hint: Kurama's tails can count the minutes but not the hour.")
+                : ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        showHint = true;
+                      });
+                    },
+                    child: const Text("Hint"))
+          ],
+        ),
+      ),
     );
   }
 

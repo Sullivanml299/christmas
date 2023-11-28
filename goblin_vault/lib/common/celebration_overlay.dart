@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CelebrationOverlay extends StatelessWidget {
-  CelebrationOverlay(
+  const CelebrationOverlay(
       {required this.child, required this.quarterTurns, super.key});
 
-  Widget child;
-  int quarterTurns;
+  final Widget child;
+  final int quarterTurns;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +21,8 @@ class CelebrationOverlay extends StatelessWidget {
             child: RotatedBox(
                 quarterTurns: quarterTurns,
                 child: TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 50),
-                  duration: Duration(seconds: 3),
+                  tween: Tween<double>(begin: 0, end: 25),
+                  duration: const Duration(seconds: 3),
                   builder: (context, value, child) => Text(
                     "Puzzle Completed!",
                     style: TextStyle(fontSize: value),

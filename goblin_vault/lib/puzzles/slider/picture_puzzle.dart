@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:goblin_vault/common/celebration_overlay.dart';
 import 'package:goblin_vault/grid/flutter_draggable_gridview.dart';
 
 class PicturePuzzle extends StatefulWidget {
@@ -30,7 +29,9 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
 
   @override
   Widget build(BuildContext context) {
-    return buildPuzzle();
+    return isSolved
+        ? CelebrationOverlay(quarterTurns: 0, child: buildPuzzle())
+        : buildPuzzle();
   }
 
   Widget buildPuzzle() {
@@ -63,7 +64,7 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
         if (isSolved) validateClue(true);
       },
       dragFeedback: (List<DraggableGridItem> list, int index) {
-        return Container(
+        return SizedBox(
           width: 200,
           height: 150,
           child: list[index].child,
@@ -93,6 +94,8 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
         isDraggable: true,
         child: Image(
           image: piece.image!,
+          color: isSolved ? Colors.transparent : Colors.white,
+          colorBlendMode: BlendMode.difference,
         ));
   }
 
@@ -103,10 +106,7 @@ class _PicturePuzzleState extends State<PicturePuzzle> {
   }
 
   validateClue(dynamic password) {
-    var isSolved = widget.validator(password);
-    if (isSolved) {
-      Navigator.of(context).pop();
-    }
+    widget.validator(password);
   }
 }
 

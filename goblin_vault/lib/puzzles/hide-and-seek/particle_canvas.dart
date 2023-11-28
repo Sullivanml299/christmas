@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui' as UI;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:collection/collection.dart';
 
 class ParticleCanvas extends StatefulWidget {
-  ParticleCanvas({required this.distance, super.key});
+  const ParticleCanvas({required this.distance, super.key});
 
-  DISTANCE distance;
+  final DISTANCE distance;
 
   @override
   State<ParticleCanvas> createState() => _ParticleCanvasState();
@@ -19,7 +17,8 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
   List<Particle> particles = List.generate(
       3,
       (index) => Particle(
-          type: ParticleType.fly, color: UI.Color.fromARGB(255, 16, 164, 43)));
+          type: ParticleType.fly,
+          color: const UI.Color.fromARGB(255, 16, 164, 43)));
   double maxVelocity = 2;
   double scale = 4;
   late Timer timer;
@@ -29,14 +28,14 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
   @override
   void initState() {
     super.initState();
-    var size = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
+    var size = MediaQueryData.fromView(WidgetsBinding.instance.window).size;
     setBottle(size);
     for (Particle p in particles) {
       p.setPosition(size.width / 2, size.height / 2);
       p.setVelocities(getVelocity(), getVelocity());
     }
 
-    timer = Timer.periodic(Duration(milliseconds: 16), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
       List<Particle> trails = [];
       for (Particle p in particles) {
         p.update();
@@ -81,17 +80,17 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
   Color getColor() {
     switch (widget.distance) {
       case DISTANCE.veryClose:
-        return UI.Color.fromARGB(255, 242, 0, 255);
+        return const UI.Color.fromARGB(255, 242, 0, 255);
       case DISTANCE.close:
-        return UI.Color.fromARGB(255, 0, 251, 255);
+        return const UI.Color.fromARGB(255, 0, 251, 255);
       case DISTANCE.near:
-        return UI.Color.fromARGB(255, 9, 214, 166);
+        return const UI.Color.fromARGB(255, 9, 214, 166);
       case DISTANCE.far:
-        return UI.Color.fromARGB(255, 13, 193, 97);
+        return const UI.Color.fromARGB(255, 13, 193, 97);
       case DISTANCE.veryFar:
-        return UI.Color.fromARGB(255, 16, 164, 43);
+        return const UI.Color.fromARGB(255, 16, 164, 43);
       default:
-        return UI.Color.fromARGB(255, 0, 225, 255);
+        return const UI.Color.fromARGB(255, 0, 225, 255);
     }
   }
 

@@ -114,6 +114,8 @@ flutter:
     - assets/stones/wrong7.jpg
     - assets/stones/yellow_quartz.jpg
     - assets/stones/zoisite.jpg
+    - assets/images/scroll.gif
+    - assets/images/scroll.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

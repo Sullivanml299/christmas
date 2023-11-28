@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:goblin_vault/rock_data.dart';
+import 'package:goblin_vault/puzzles/rocks/rock_data.dart';
 
 class RockChart extends StatelessWidget {
   const RockChart({super.key});

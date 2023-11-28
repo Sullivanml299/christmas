@@ -1,9 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_draggable_gridview/flutter_draggable_gridview.dart';
-import 'package:goblin_vault/celebration_overlay.dart';
-import 'package:goblin_vault/planet_data.dart';
+import 'package:goblin_vault/common/celebration_overlay.dart';
+import 'package:goblin_vault/puzzles/planets/planet_data.dart';
 
 class PlanetPuzzle extends StatefulWidget {
   const PlanetPuzzle({super.key, required this.validator});
@@ -112,9 +110,6 @@ class _PlanetPuzzleState extends State<PlanetPuzzle> {
   }
 
   validateClue(dynamic password) {
-    var isSolved = widget.validator(password);
-    // if (isSolved) {
-    //   Navigator.of(context).pop();
-    // }
+    widget.validator(password);
   }
 }

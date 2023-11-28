@@ -1,8 +1,6 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:goblin_vault/clues.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class Scanner extends StatefulWidget {
@@ -55,7 +53,7 @@ class _ScannerState extends State<Scanner> {
               child: (result != null)
                   ? Text(
                       'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  : Text('Scan the code!'),
+                  : const Text('Scan the code!'),
             ),
           )
         ],
@@ -75,7 +73,6 @@ class _ScannerState extends State<Scanner> {
 
   validateClue(dynamic password) {
     var isSolved = widget.validator(password);
-    print(isSolved);
     if (isSolved && !solved) {
       setState(() {
         solved = isSolved;

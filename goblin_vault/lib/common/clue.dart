@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:goblin_vault/clock.dart';
-import 'package:goblin_vault/clues.dart';
-import 'package:goblin_vault/qr_scanner.dart';
+import 'package:goblin_vault/common/clues.dart';
+import 'package:goblin_vault/common/scroll_overlay.dart';
 
 class Clue extends StatefulWidget {
   const Clue({super.key, required this.data, required this.notifier});
@@ -34,21 +32,10 @@ class _ClueState extends State<Clue> {
 
   @override
   Widget build(BuildContext context) {
-    ClueData data = widget.data;
     return FittedBox(
-        child: SizedBox(
-      width: MediaQuery.of(context).size.width / 2,
-      child: Column(
-        children: [
-          Row(children: [
-            Text(data.prompt),
-          ]),
-          Row(
-            children: [getChallenge()],
-          )
-        ],
-      ),
-    ));
+      child: SizedBox(
+          width: MediaQuery.of(context).size.width / 2, child: getChallenge()),
+    );
   }
 
   Widget getChallenge() {
@@ -58,18 +45,43 @@ class _ClueState extends State<Clue> {
         style: TextStyle(color: Color.fromARGB(255, 0, 251, 255), fontSize: 20),
       );
     }
-    return ElevatedButton.icon(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => widget.data.solver(
-                      validate,
-                    )),
-          );
-        },
-        icon: getIcon(widget.data.solver),
-        label: const Text("Begin"));
+    return Column(
+      children: [
+        IconButton(
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              actionsPadding: EdgeInsets.zero,
+              iconPadding: EdgeInsets.zero,
+              insetPadding: EdgeInsets.zero,
+              titlePadding: EdgeInsets.zero,
+              buttonPadding: EdgeInsets.zero,
+              content: ScrollOverlay(child: null, text: widget.data.prompt),
+            ),
+          ),
+          icon: SizedBox(
+              width: 150,
+              height: 100,
+              child: Image.asset(
+                'assets/images/scroll.png',
+                fit: BoxFit.scaleDown,
+              )),
+        ),
+        ElevatedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => widget.data.solver(
+                          validate,
+                        )),
+              );
+            },
+            icon: getIcon(widget.data.solver),
+            label: const Text("Begin")),
+      ],
+    );
   }
 
   Icon getIcon(Function solver) {

@@ -1,8 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:goblin_vault/qr_scanner.dart';
+import 'package:goblin_vault/common/qr_scanner.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 

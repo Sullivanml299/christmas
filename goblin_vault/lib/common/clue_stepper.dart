@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:goblin_vault/clue.dart';
-import 'package:goblin_vault/clues.dart';
+import 'package:goblin_vault/common/clue.dart';
+import 'package:goblin_vault/common/clues.dart';
 
 import 'custom_stepper.dart';
 
@@ -28,39 +27,25 @@ class _ClueStepperState extends State<ClueStepper> {
 
   Widget buildStepper() {
     var clues = buildClues();
-    if (clues != null) {
-      return CustomStepper(
-          currentStep: _index,
-          controlsBuilder: (context, details) {
-            return Row(
-              children: <Widget>[
-                TextButton(
-                  onPressed: isSolved[_index] ? details.onStepContinue : null,
-                  child: Text('NEXT'),
-                ),
-                TextButton(
-                  onPressed: details.onStepCancel,
-                  child: Text('BACK'),
-                ),
-              ],
-            );
-          },
-          onStepCancel: () {
-            cancel();
-          },
-          onStepContinue: () {
-            if (_index < clues.length - 1) {
-              setState(() {
-                _index += 1;
-              });
-            }
-          },
-          onStepTapped: (int index) {
-            tapped(index);
-          },
-          steps: clues);
-    }
-    return Container();
+    return CustomStepper(
+        currentStep: _index,
+        controlsBuilder: (context, details) {
+          return Container();
+        },
+        onStepCancel: () {
+          cancel();
+        },
+        onStepContinue: () {
+          if (_index < clues.length - 1) {
+            setState(() {
+              _index += 1;
+            });
+          }
+        },
+        onStepTapped: (int index) {
+          tapped(index);
+        },
+        steps: clues);
   }
 
   cancel() {
@@ -86,7 +71,7 @@ class _ClueStepperState extends State<ClueStepper> {
     for (ClueData data in CLUE_DATA) {
       clues.add(
         CustomStep(
-            title: Text('Step ${data.index + 1} title'),
+            title: Text(data.title),
             state: CustomStepState.customIcon,
             customIcon: buildIcon(data.index),
             content: Container(

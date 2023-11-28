@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:goblin_vault/particle_canvas.dart';
+import 'package:goblin_vault/puzzles/hide-and-seek/particle_canvas.dart';
 import 'package:goblin_vault/positions.dart';
-import 'package:goblin_vault/qr_scanner.dart';
+import 'package:goblin_vault/common/qr_scanner.dart';
 import 'package:just_audio/just_audio.dart';
 
 class HideAndSeek extends StatefulWidget {
@@ -81,7 +80,7 @@ class _HideAndSeekState extends State<HideAndSeek> {
 
   updateState() {
     DISTANCE newState = currentState;
-    if (distance < 20) {
+    if (distance < 15) {
       newState = DISTANCE.veryClose;
     } else if (distance < 40) {
       newState = DISTANCE.close;

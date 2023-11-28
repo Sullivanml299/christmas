@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 // TODO(dragostis): Missing functionality:
 //   * mobile horizontal mode with adding/removing steps
@@ -133,9 +132,7 @@ class CustomStep {
     this.isActive = false,
     this.label,
     this.customIcon,
-  })  : assert(title != null),
-        assert(content != null),
-        assert(state != null);
+  });
 
   final Widget? customIcon;
 
@@ -205,10 +202,7 @@ class CustomStepper extends StatefulWidget {
     this.controlsBuilder,
     this.elevation,
     this.margin,
-  })  : assert(steps != null),
-        assert(type != null),
-        assert(currentStep != null),
-        assert(0 <= currentStep && currentStep < steps.length);
+  }) : assert(0 <= currentStep && currentStep < steps.length);
 
   /// The steps of the stepper whose titles, subtitles, icons always get shown.
   ///
@@ -375,7 +369,6 @@ class _StepperState extends State<CustomStepper> with TickerProviderStateMixin {
     final CustomStepState state =
         oldState ? _oldStates[index]! : widget.steps[index].state;
     final bool isDarkActive = _isDark() && widget.steps[index].isActive;
-    assert(state != null);
     switch (state) {
       case CustomStepState.indexed:
       case CustomStepState.disabled:
@@ -576,7 +569,6 @@ class _StepperState extends State<CustomStepper> with TickerProviderStateMixin {
     final ThemeData themeData = Theme.of(context);
     final TextTheme textTheme = themeData.textTheme;
 
-    assert(widget.steps[index].state != null);
     switch (widget.steps[index].state) {
       case CustomStepState.indexed:
       case CustomStepState.editing:
@@ -598,7 +590,6 @@ class _StepperState extends State<CustomStepper> with TickerProviderStateMixin {
     final ThemeData themeData = Theme.of(context);
     final TextTheme textTheme = themeData.textTheme;
 
-    assert(widget.steps[index].state != null);
     switch (widget.steps[index].state) {
       case CustomStepState.indexed:
       case CustomStepState.editing:
@@ -620,7 +611,6 @@ class _StepperState extends State<CustomStepper> with TickerProviderStateMixin {
     final ThemeData themeData = Theme.of(context);
     final TextTheme textTheme = themeData.textTheme;
 
-    assert(widget.steps[index].state != null);
     switch (widget.steps[index].state) {
       case CustomStepState.indexed:
       case CustomStepState.editing:
@@ -885,7 +875,6 @@ class _StepperState extends State<CustomStepper> with TickerProviderStateMixin {
       }
       return true;
     }());
-    assert(widget.type != null);
     switch (widget.type) {
       case StepperType.vertical:
         return _buildVertical();
